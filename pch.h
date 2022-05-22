@@ -1,10 +1,11 @@
+//SFML
+#include<SFML/Graphics.hpp>
+#include<SFML/Network.hpp>
 //Curl
 #define CURL_STATICLIB
 #include <curl\curl.h>
 //JSON
 #include "json.hpp"
-//SFML
-#include<SFML/Network.hpp>
 //STD
 #include <iostream>
 #include <string>
@@ -12,6 +13,9 @@
 #include <sstream> 
 #include <algorithm>
 #include <thread>
+#include <cstdlib>
+#include <time.h>
+#include <fstream>
 //Containers
 #include <stack>
 #include <map>
