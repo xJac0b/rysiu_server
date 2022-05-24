@@ -28,6 +28,7 @@ struct SessionData
     float finished = 0;
 };
 
+
 static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp)
     {
         ((std::string*)userp)->append((char*)contents, size * nmemb);
@@ -40,7 +41,7 @@ int apiLogin(std::string username, std::string password, sf::TcpSocket* socket)
     CURLcode res;
     sf::Packet pak;
     std::string readBuffer = "";
-    std::string url = "localhost:13378/api/game/login?username=" + username + "&password=" + password;
+    std::string url = "192.168.1.41:13378/api/game/login?username=" + username + "&password=" + password;
     curl = curl_easy_init();
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
@@ -75,7 +76,7 @@ int apiLogin(std::string username, std::string password, sf::TcpSocket* socket)
     readBuffer.clear();
     curl = curl_easy_init();
     if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, std::string("localhost:13378/api/game/getuserdatabysecret?token=" +
+        curl_easy_setopt(curl, CURLOPT_URL, std::string("192.168.1.41:13378/api/game/getuserdatabysecret?token=" +
             j["token"].get<std::string>()).c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
@@ -117,6 +118,8 @@ int apiLogin(std::string username, std::string password, sf::TcpSocket* socket)
         wins = j["data"]["wins"].get<int>(),
         losses = j["data"]["losses"].get<int>(),
         id = j["data"]["id"].get<int>();
+    if (img[0] == '/')
+        img = "192.168.1.41" + img;
     url = img;
     readBuffer = "";
     curl = curl_easy_init();
@@ -470,7 +473,7 @@ int main()
                                                     CURL* curl;
                                                     CURLcode res;
                                                     std::string readBuffer = "";
-                                                    std::string url = "localhost:13378/api/game/increaseuserdatabyid?token=haselkomaselko&id="
+                                                    std::string url = "192.168.1.41:13378/api/game/increaseuserdatabyid?token=haselkomaselko&id="
                                                         + std::to_string(games[token].users[winner].id) + "&money=10&xp=20&wins=1&points=10";
                                                     curl = curl_easy_init();
                                                     if (curl) {
@@ -480,7 +483,7 @@ int main()
                                                         res = curl_easy_perform(curl);
                                                         curl_easy_cleanup(curl);
                                                     }
-                                                    url = "localhost:13378/api/game/increaseuserdatabyid?token=haselkomaselko&id="
+                                                    url = "192.168.1.41:13378/api/game/increaseuserdatabyid?token=haselkomaselko&id="
                                                         + std::to_string(games[token].users[loser].id) + "&xp=5&losses=1&points=-10";
                                                     curl = curl_easy_init();
                                                     if (curl) {
@@ -540,8 +543,8 @@ int main()
                             pak >> id;
                             CURL* curl;
                             CURLcode res;
-                            std::string readBuffer = "";
-                            std::string url = "localhost:13378/api/game/getuserdatabyid?id="+std::to_string(id);
+                            std::string readBuffer="";
+                            std::string url = "192.168.1.41:13378/api/game/getuserdatabyid?id="+std::to_string(id);
                             curl = curl_easy_init();
                             if (curl) {
                                 curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
@@ -561,6 +564,8 @@ int main()
                                 wins = j["data"]["wins"].get<int>(),
                                 losses = j["data"]["losses"].get<int>();
                             id = j["data"]["id"].get<int>();
+                            if (img[0] == '/')
+                                img = "192.168.1.41" + img;
                             url = img;
                             readBuffer = "";
                             curl = curl_easy_init();
@@ -581,7 +586,7 @@ int main()
                             CURL* curl;
                             CURLcode res;
                             std::string readBuffer = "";
-                            std::string url = "localhost:13378/api/game/getleaderboard?";
+                            std::string url = "192.168.1.41:13378/api/game/getleaderboard?";
                             curl = curl_easy_init();
                             if (curl) {
                                 curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
@@ -606,6 +611,8 @@ int main()
                                     wins = j["data"][i]["wins"].get<int>(),
                                     losses = j["data"][i]["losses"].get<int>(),
                                     id = j["data"][i]["id"].get<int>();
+                                if (img[0] == '/')
+                                    img = "192.168.1.41" + img;
                                 url = img;
                                 readBuffer = "";
                                 curl = curl_easy_init();
